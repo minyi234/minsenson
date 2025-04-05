@@ -48,6 +48,12 @@ jobs:
           --transform-object-keys true \
           --unicode-escape-sequence true
 
+      - name: Commit an
+
+      - name: Commit anl
+      
+      - name: Commit ano
+      
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

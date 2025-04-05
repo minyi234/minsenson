@@ -5,8 +5,7 @@ on:
     branches:
       - main
   schedule:
-        # Runs everyday at 1:00 AM
-        - cron: "0 1 * * *"
+    - cron: "0 1 * * *"
 
 permissions:
   contents: write
@@ -22,11 +21,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "latest"
+          node-version: "20"  # 固定Node版本避免兼容问题
 
       - name: Install dependencies
         run: |
-          npm install -g javascript-obfuscator
+          npm install -g javascript-obfuscator@4.0.0  # 使用旧版更稳定
 
       - name: Clone BPB workjs
         run: |
@@ -36,28 +35,19 @@ jobs:
         run: |
           javascript-obfuscator origin.js --output _worker.js \
           --compact true \
-          --control-flow-flattening true \
-          --control-flow-flattening-threshold 1 \
-          --dead-code-injection true \
-          --dead-code-injection-threshold 1 \
+          --control-flow-flattening false \  # 关闭最耗CPU的选项
+          --dead-code-injection false \     # 关闭死代码注入
           --identifier-names-generator hexadecimal \
           --rename-globals true \
           --string-array true \
-          --string-array-encoding 'rc4' \
-          --string-array-threshold 1 \
+          --string-array-encoding 'base64' \ # 改用base64降低开销
+          --string-array-threshold 0.75 \    # 提高触发阈值
           --transform-object-keys true \
           --unicode-escape-sequence true
 
-      - name: Commit an
-
-      - name: Commit anl
-      
-      - name: Commit ano
-      
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: main
           commit_message: ':arrow_up: update latest bpb panel'
           commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
-          push_options: '--set-upstream'
